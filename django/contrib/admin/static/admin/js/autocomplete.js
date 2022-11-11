@@ -7,13 +7,20 @@
             $(element).select2({
                 ajax: {
                     data: (params) => {
-                        return {
-                            term: params.term,
-                            page: params.page,
-                            app_label: element.dataset.appLabel,
-                            model_name: element.dataset.modelName,
-                            field_name: element.dataset.fieldName
-                        };
+                        let extra = {};
+                            if ($element.data('callback-func') && typeof window[$element.data('callback-func')] === "function") {
+                                extra = window[$element.data('callback-func')]();
+                            }
+                        return Object.assign(
+                            {
+                                term: params.term,
+                                page: params.page,
+                                app_label: $element.data('app-label'),
+                                model_name: $element.data('model-name'),
+                                field_name: $element.data('field-name'),
+                            },
+                            extra
+                        );
                     }
                 }
             });
